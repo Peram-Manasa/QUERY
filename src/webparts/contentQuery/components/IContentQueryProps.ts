@@ -2,7 +2,7 @@ import { WebPartContext } from "@microsoft/sp-webpart-base";
 // import { StringLiteral } from "typescript";
 
 export interface IContentQueryProps {
-  title: string[];
+  title: Promise<string>;
   context: WebPartContext;
   description: string;
   isDarkTheme: boolean;

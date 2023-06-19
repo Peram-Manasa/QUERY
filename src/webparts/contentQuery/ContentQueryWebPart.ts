@@ -14,9 +14,11 @@ import { IPropertyFieldSite } from '@pnp/spfx-property-controls/lib/PropertyFiel
 import * as strings from 'ContentQueryWebPartStrings';
 import { IContentQueryProps } from './components/IContentQueryProps';
 import ContentQuery from './components/ContentQuery';
+import { SPFI } from '@pnp/sp';
+import { getSP } from '../../pnpConfig';
 
-
-
+import '@pnp/sp/presets/all'
+import '@pnp/common'
 
 export interface IContentQueryWebPartProps {
   textInfoHeaderValue: string;
@@ -31,7 +33,7 @@ export interface IContentQueryWebPartProps {
   description: string;
   selectedList:string;
   siteId:string;
-  title:string;
+  title:Promise<string>;
 }
 
 export interface IDynamicItem {
@@ -74,6 +76,8 @@ export default class ContentQueryWebPart extends BaseClientSideWebPart<IContentQ
   private _environmentMessage: string = '';
   options: IPropertyPaneDropdownOption[];
   selectedItem: IDynamicItem;
+
+  
    public constructor(){
     super();
    }
@@ -93,7 +97,7 @@ export default class ContentQueryWebPart extends BaseClientSideWebPart<IContentQ
      environmentMessage: this._environmentMessage,
      hasTeamsContext: !!this.context.sdks.microsoftTeams,
      userDisplayName: this.context.pageContext.user.displayName,
-     title: this.properties.singleListFiltered,
+     title: this.getListTitle(this.properties.list),
      onSelectedItem: this.onSelectedItem.bind(this),
      listNames:this.properties.multiColumn,
       }
@@ -203,11 +207,32 @@ PropertyFieldColumnPicker('multiColumn', {
         }
       ]
     };
+
+  }
+  public async getListTitle(listId:any):Promise<string>{
+    const sp:SPFI= await getSP(this.context);
+    const listDetails = await sp.web.lists.getById(listId)
+    const listInfo = await listDetails.getParentInfos();
+    console.log(listInfo.List.RootFolderServerRelativeUrl);
+    
+    const string = listInfo.List.RootFolderServerRelativeUrl
+const regex = /\/Lists\/(.*)/; // Matches "/Lists/" followed by any characters
+
+const match = string.match(regex);
+if (match) {
+  const extractedWord = match[1]; // Capturing group 1 contains the extracted word
+  console.log(extractedWord); // Output: "Birthdays"
+  return extractedWord
+} else {
+  console.log("No match found.");
+  return"Error"
+}
+   
   }
   public onPropertyListChange(propertyPath: string, oldValue: any, newValue: any): void{
         this.properties.list = newValue;
         console.log(newValue);
-        
+        this.getListTitle(newValue)
         console.log(this.properties.list);
         this.properties.singleListFiltered = newValue;
         // this.properties.title=newValue[0].title

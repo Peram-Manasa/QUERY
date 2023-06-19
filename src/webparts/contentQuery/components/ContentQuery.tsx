@@ -15,7 +15,7 @@ import { DetailsList } from 'office-ui-fabric-react';
 
 
 
-export default class ContentQuery extends React.Component<IContentQueryProps,{ListData:Array<string>,columnArr:Array<string>}> {
+export default class ContentQuery extends React.Component<IContentQueryProps,{ListData:Array<string>,columnArr:Array<string>,titleOfList:string}> {
   
   public realListData:any
   public createQuery():any{
@@ -50,7 +50,11 @@ export default class ContentQuery extends React.Component<IContentQueryProps,{Li
       this.realListData=d
        console.log(this.realListData)
        console.log(Reallist);
-       
+       this.props.title.then((data:string)=>{
+        this.setState({
+          titleOfList:data
+        })
+       }) 
       // let arr:any[]=[];
       //  d.map((y: any) => { Object.keys(y).filter(x => x !== "odata.type" && x !== "odata.id" && x !== "odata.etag" && x !== "odata.editLink" && x !== "FileSystemObjectType" && x !== "ServerRedirectedEmbedUri" && x !== "ServerRedirectedEmbedUrl" && x !== "ContentTypeId" && x !== "ComplianceAssetId" && x !== "OData__ColorTag" && x !== "AuthorId" && x !== "EditorId" && x !== "OData__UIVersionString" && x !== "Attachments" && x !== "GUID" && x !== "Id").map((x: any) => { console.log(x); arr.push(x) }) })
 
@@ -99,15 +103,18 @@ export default class ContentQuery extends React.Component<IContentQueryProps,{Li
     super(props);
     this.state = {  
      ListData:[],
-     columnArr:[]
+     columnArr:[],
+     titleOfList:""
     };  
    }
+
   public render(): React.ReactElement<IContentQueryProps> {
     console.log(this.props.selectedList);
     console.log(this.props.title);
     console.log(this.state.ListData);
     console.log(this.generateColumns());
-    console.log(this.props.title);
+    console.log(this.state.titleOfList);
+    
     let columnsofthedetailslist = this.generateColumns()
     // let actualRealdata = this.getdata();
     // console.log(actualRealdata);
@@ -117,7 +124,7 @@ export default class ContentQuery extends React.Component<IContentQueryProps,{Li
         <>  
        
 <div>
-  <div>{this.props.selectedList}  <br/>testing</div>
+  <div><h2>{this.state.titleOfList}</h2></div>
       <DetailsList
         columns={this.generateColumns()}
         items={this.state.ListData}

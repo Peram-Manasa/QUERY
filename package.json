@@ -12,11 +12,12 @@
     "test": "gulp test"
   },
   "dependencies": {
-    "@microsoft/sp-core-library": "1.17.1",
+    "@microsoft/sp-component-base": "^1.17.3",
+    "@microsoft/sp-core-library": "^1.17.3",
     "@microsoft/sp-lodash-subset": "1.17.1",
     "@microsoft/sp-office-ui-fabric-core": "1.17.1",
-    "@microsoft/sp-property-pane": "1.17.1",
-    "@microsoft/sp-webpart-base": "1.17.1",
+    "@microsoft/sp-property-pane": "^1.17.3",
+    "@microsoft/sp-webpart-base": "^1.17.3",
     "@pnp/graph": "^3.16.0",
     "@pnp/logging": "^3.13.0",
     "@pnp/sp": "^3.16.0",
